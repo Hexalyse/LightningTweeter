@@ -11,4 +11,4 @@ This script uses those libraries :
 
 You also need to configure I2C on your Raspberry Pi. Adafruit made a [tutorial](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c) explaining how to.
 
-If you want to know more about how I use it, you can read [this article](https://hexaly.se/2017/06/23/lightning-strike…ets-storm-alerts/).
+If you want to know more about how I use it, you can read [this article](https://hexaly.se/2017/06/27/lightning-strikes-detection-station-that-tweets-storm-alerts/).
