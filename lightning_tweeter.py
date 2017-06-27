@@ -73,7 +73,7 @@ def handle_interrupt(channel):
             strikes_since_last_alert = 0
         last_alert = current_timestamp
     # If no strike has been detected for the last hour, reset the strikes_since_last_alert (consider storm finished)
-    if (current_timestamp - last_alert).seconds > 3600 and strikes_since_last_alert > 0:
+    if (current_timestamp - last_alert).seconds > 1800 and last_alert != datetime.min:
         thread.start_new_thread(send_tweet, (
                 "\o/ Orage terminé. Aucun nouvel éclair détecté depuis 1 heure.",))
         strikes_since_last_alert = 0
