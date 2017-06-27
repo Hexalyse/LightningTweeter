@@ -28,6 +28,8 @@ sensor.set_indoors(False)
 sensor.set_noise_floor(1)
 # Change this value to the tuning value for your sensor
 sensor.calibrate(tun_cap=0x01)
+# Prevent single isolated strikes from being logged => interrupts begin after 5 strikes, then are fired normally
+sensor.set_min_strikes(5)
 
 last_alert = datetime.min
 strikes_since_last_alert = 0
