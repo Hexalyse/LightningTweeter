@@ -24,8 +24,8 @@ pin = 17
 sensor = RPi_AS3935(address=0x03, bus=1)
 # Indoors = more sensitive (can miss very strong lightnings)
 # Outdoors = less sensitive (can miss far away lightnings)
-sensor.set_indoors(True)
-sensor.set_noise_floor(0)
+sensor.set_indoors(False)
+sensor.set_noise_floor(1)
 # Change this value to the tuning value for your sensor
 sensor.calibrate(tun_cap=0x01)
 
@@ -59,7 +59,6 @@ def handle_interrupt(channel):
             print("Last strike is too recent, incrementing counter since last alert.")
             strikes_since_last_alert += 1
             return
-        last_alert = current_timestamp
         distance = sensor.get_distance()
         energy = sensor.get_energy()
         print("Energy: " + str(energy) + " - distance: " + str(distance) + "km")
@@ -70,13 +69,11 @@ def handle_interrupt(channel):
         else:
             thread.start_new_thread(send_tweet, (
                 "/!\ {2} éclairs détectés ces {3} dernières minutes. Puissance dernier éclair : {0} - distance du front de tempête : {1}km".format(
-                    energy, distance, strikes_since_last_alert + 1, (current_timestamp - last_alert).seconds / 60),))
+                    energy, distance, strikes_since_last_alert + 1, (current_timestamp - last_alert).minutes),))
             strikes_since_last_alert = 0
+        last_alert = current_timestamp
     # If no strike has been detected for the last hour, reset the strikes_since_last_alert (consider storm finished)
-    if (current_timestamp - last_alert).seconds > 3600 and strikes_since_last_alert > 0:
-        thread.start_new_thread(send_tweet, (
-                "/!\ Tempête terminée. Aucun éclair détecté depuis une heure. Puissance dernier éclair : {0} - distance du front de tempête : {1}km".format(
-                    energy, distance),))
+    if (current_timestamp - last_alert).seconds > 3600:
         strikes_since_last_alert = 0
         last_alert = datetime.min
 
